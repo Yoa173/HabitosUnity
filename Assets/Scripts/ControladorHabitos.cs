@@ -23,8 +23,7 @@ string ruta;
     void Start()
 
     {
-        Habito h1= new Habito("Hacer deporte", 10);
-        listaHabitos.Add(h1);
+        CargarJson();
         
         foreach (Habito h in listaHabitos){
             Debug.Log($"Hábito: {h.nombreHabito}, puntos: {h.puntos}, completado:{h.completado}");
@@ -54,6 +53,7 @@ string ruta;
             GameObject casilla = Instantiate(CasillaHabito, Content);
             casilla.GetComponentsInChildren<TMP_Text>()[0].text=Input_habito.text;
             casilla.GetComponentsInChildren<TMP_Text>()[1].text=$"+{puntos.ToString()}";
+            GuardarEnJson();
 
          
             
@@ -75,6 +75,22 @@ string ruta;
     Debug.Log("Json Actualizado");
     
 }
+
+public void CargarJson()
+    {
+        if (System.IO.File.Exists(ruta))
+        {
+            string textoJson =System.IO.File.ReadAllText(ruta);
+            listadoHabitos datosCargados = JsonUtility.FromJson<listadoHabitos>(textoJson);
+            listaHabitos = datosCargados.listadoJson;
+
+            foreach(Habito h in listaHabitos)
+            {   GameObject casilla = Instantiate(CasillaHabito, Content);            
+                casilla.GetComponentsInChildren<TMP_Text>()[0].text = h.nombreHabito;
+                casilla.GetComponentsInChildren<TMP_Text>()[1].text = $"+{h.puntos}";
+            }
+        }
+    }
 
     
 }
